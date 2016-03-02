@@ -12,12 +12,17 @@ import java.util.ArrayList;
  */
 public class ParserSax extends DefaultHandler{
     ArrayList<String> elementAttributes = new ArrayList<>();
+    String applicationType = "";
 
     public DataStorage getDataStorage() {
         return dataStorage;
     }
 
-    DataStorage dataStorage = new DataStorage();
+    public ParserSax(DataStorage dataStorage) {
+        this.dataStorage = dataStorage;
+    }
+
+    DataStorage dataStorage;
 
     /**
      * Start of document parsing
@@ -39,9 +44,10 @@ public class ParserSax extends DefaultHandler{
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         //System.out.println("Qname: " + qName);
-        //System.out.println("Attributes: " + attributes.getLocalName(0) + " : " + attributes.getQName(0) + " : " + attributes.getValue(0) );
+        System.out.println("Attributes: " + attributes.getLocalName(0) + " : " + attributes.getQName(0) + " : " + attributes.getValue(0) );
         dataStorage.setAttributes(attributes);
         dataStorage.setElement(qName);
+        //applicationType = attributes.getValue(0);
     }
 
     /**
@@ -55,12 +61,17 @@ public class ParserSax extends DefaultHandler{
     public void characters(char[] ch, int start, int length) throws SAXException {
         switch (dataStorage.getElement()) {
             case "application":
+                applicationType = dataStorage.getAttributes().getValue(0);
                 dataStorage.setAttributeValue(dataStorage.getAttributes().getValue(0));
                 System.out.println("Attribute " + dataStorage.getAttributes().getQName(0) + " = " + dataStorage.getAttributeValue());
                 break;
             case "sourcepath":
                 dataStorage.setSourcePath(new String(ch, start, length));
                 System.out.println("sourcepath: " + dataStorage.getSourcePath());
+                break;
+            case "destpath":
+                dataStorage.setDestPath(new String(ch, start, length) + applicationType);
+                System.out.println("destpath: " + dataStorage.getDestPath());
                 break;
         }
     }
@@ -76,6 +87,7 @@ public class ParserSax extends DefaultHandler{
     public void endElement(String uri, String localName, String qName) throws SAXException {
         dataStorage.setElement("");
         dataStorage.setAttributes(null);
+        //applicationType = "";
     }
 
     /**

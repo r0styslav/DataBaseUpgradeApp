@@ -13,6 +13,7 @@ public class DataStorage {
     private String element;
     private String applicationType;
     private ArrayList<String> sourcePath = new ArrayList<>();
+    private ArrayList<String> destPath = new ArrayList<>();
     private Attributes attributes;
     private ArrayList<String> attributeValue = new ArrayList<>();
 
@@ -58,5 +59,13 @@ public class DataStorage {
 
     public ArrayList<String> getAttributeValue() {
         return attributeValue;
+    }
+
+    public ArrayList<String> getDestPath() {
+        return destPath;
+    }
+
+    public void setDestPath(String destPath) {
+        this.destPath.add(destPath);
     }
 }
