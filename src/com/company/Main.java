@@ -15,5 +15,7 @@ public class Main {
 
         FileManager fileManager = new FileManager();
         fileManager.copyAllFiles();
+        fileManager.createAllSqlFile();
+        fileManager.runScript();
     }
 }

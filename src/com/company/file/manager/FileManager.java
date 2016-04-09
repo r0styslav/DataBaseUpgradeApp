@@ -2,11 +2,13 @@ package com.company.file.manager;
 
 import com.company.file.parser.XmlParser;
 import com.company.file.storage.DataStorage;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-
 /**
  * Created by Rostyslav.Pash on 22-Feb-16.
  *
@@ -67,6 +69,18 @@ public class FileManager {
     }
 
     /**
+     * Method that runs cmd file in current dir
+     */
+    public void runScript() {
+        try {
+            Runtime.getRuntime().exec("cmd /c \"C:\\!Work\\copy Test\\script.bat\"");
+        } catch (IOException io) {
+            System.out.println("Bat file was not executed:");
+            System.out.println(io.getStackTrace());
+        }
+    }
+
+    /**
      * Method prints files in scrDir
      */
     public void printListOfFiles() {
@@ -103,6 +117,45 @@ public class FileManager {
     }
 
     /**
+     * Method creates new file
+     */
+    public void createAllSqlFile(String targetPath) throws IOException {
+        File file = new File(targetPath + "\\All.sql");
+        if (file.createNewFile()) {
+            System.out.println("File All.sql created");
+        } else {
+            System.out.println("File All.sql already exist");
+        }
+
+    }
+
+    public void createAllSqlFile() throws IOException {
+        for (File targetDir :
+                destDir) {
+            File file = new File(targetDir.toString() + "\\All.sql");
+            if (file.createNewFile()) {
+                System.out.println("File All.sql created in " + targetDir.getPath() + "\\");
+            } else {
+                System.out.println("File All.sql already exist" + targetDir.getPath() + "\\");
+            }
+            // Add all filenames to All.sql
+            //FileUtils.writeStringToFile(file, "String to append", true);
+            try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(targetDir.toString() + "\\All.sql", false)))) {
+                for (File dir :
+                        targetDir.listFiles()) {
+                        if (!dir.getName().equalsIgnoreCase("All.sql"))
+                            out.println(dir.getName());
+                }
+            }catch (IOException e) {
+                System.err.println(e);
+            }
+
+
+        }
+
+    }
+
+    /**
      * Copy all files from srcDir to destDir set in parameters
      */
     public void copyAllFiles() {
@@ -110,8 +163,10 @@ public class FileManager {
             for (File file : filesList.get(i)) {
                 try {
                     InputStream in = new FileInputStream(file);
-                    if (!destDir.get(i).isDirectory())
-                        destDir.get(i).mkdir();
+                    if (!destDir.get(i).isDirectory() || !destDir.get(i).exists()){
+                        Path pathToFile = Paths.get(destDir.get(i).toString());
+                        Files.createDirectories(pathToFile);
+                    }
                     OutputStream out = new FileOutputStream(destDir.get(i) + "/" + file.getName());
                     byte[] buf = new byte[1024];
                     int len;
