@@ -16,6 +16,15 @@ public class DataStorage {
     private ArrayList<String> destPath = new ArrayList<>();
     private Attributes attributes;
     private ArrayList<String> attributeValue = new ArrayList<>();
+    private ArrayList<String> scriptsToExecute = new ArrayList<>();
+
+    public void setScriptsToExecute(String scriptsToExecute) {
+        this.scriptsToExecute.add(scriptsToExecute);
+    }
+
+    public ArrayList<String> getScriptsToExecute() {
+        return scriptsToExecute;
+    }
 
     public void setElement(String element) {
         this.element = element;

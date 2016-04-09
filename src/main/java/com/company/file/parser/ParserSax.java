@@ -45,7 +45,7 @@ public class ParserSax extends DefaultHandler{
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         //System.out.println("Qname: " + qName);
-        System.out.println("Attributes: " + attributes.getLocalName(0) + " : " + attributes.getQName(0) + " : " + attributes.getValue(0) );
+        //System.out.println("Attributes: " + attributes.getValue(0) );
         dataStorage.setAttributes(attributes);
         dataStorage.setElement(qName);
         //applicationType = attributes.getValue(0);
@@ -64,16 +64,19 @@ public class ParserSax extends DefaultHandler{
             case "application":
                 applicationType = dataStorage.getAttributes().getValue(0);
                 dataStorage.setAttributeValue(dataStorage.getAttributes().getValue(0));
-                System.out.println("Attribute " + dataStorage.getAttributes().getQName(0) + " = " + dataStorage.getAttributeValue());
+                System.out.println("Attributes " + dataStorage.getAttributes().getQName(0) + " = " + dataStorage.getAttributeValue());
                 break;
             case "sourcepath":
                 dataStorage.setSourcePath(new String(ch, start, length));
                 System.out.println("sourcepath: " + dataStorage.getSourcePath());
                 break;
-            case "destpath":
+            case "target":
                 dataStorage.setDestPath(new String(ch, start, length) + applicationType);
-                System.out.println("destpath: " + dataStorage.getDestPath());
+                System.out.println("target: " + dataStorage.getDestPath());
                 break;
+            case "script":
+                dataStorage.setScriptsToExecute(new String(ch, start, length));
+                System.out.println("script: " + dataStorage.getScriptsToExecute());
         }
     }
 

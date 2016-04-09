@@ -2,7 +2,6 @@ package com.company.file.manager;
 
 import com.company.file.parser.XmlParser;
 import com.company.file.storage.DataStorage;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -72,12 +71,22 @@ public class FileManager {
      * Method that runs cmd file in current dir
      */
     public void runScript() {
-        try {
-            Runtime.getRuntime().exec("cmd /c \"C:\\!Work\\copy Test\\script.bat\"");
-        } catch (IOException io) {
-            System.out.println("Bat file was not executed:");
-            System.out.println(io.getStackTrace());
+        System.out.println("Running bat files");
+        if (dataStorage.getScriptsToExecute().size() != 0)
+        for (String scriptPath:
+            dataStorage.getScriptsToExecute()) {
+            try {
+                //Runtime.getRuntime().exec("cmd /c \"C:\\!Work\\copy Test\\script.bat\""); //leave for Jenkins
+                //Runtime.getRuntime().exec("cmd /c start C:\\script.bat"); //leave for Jenkins
+                Process proc = Runtime.getRuntime().exec("cmd.exe /c start " +  scriptPath);
+                System.out.println("Script: " + scriptPath + " executed!");
+            } catch (IOException io) {
+                System.out.println("Bat file was not executed:");
+                System.out.println(io.getStackTrace());
+            }
         }
+
+        System.out.println("Running bat files finished");
     }
 
     /**
@@ -136,7 +145,7 @@ public class FileManager {
             if (file.createNewFile()) {
                 System.out.println("File All.sql created in " + targetDir.getPath() + "\\");
             } else {
-                System.out.println("File All.sql already exist" + targetDir.getPath() + "\\");
+                System.out.println("File All.sql already exist " + targetDir.getPath() + "\\");
             }
             // Add all filenames to All.sql
             //FileUtils.writeStringToFile(file, "String to append", true);
