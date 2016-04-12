@@ -11,7 +11,7 @@ import java.util.ArrayList;
 /**
  * Created by Rostyslav.Pash on 22-Feb-16.
  *
- * Class to copy files from srcDir to destDir
+ * Class to copy files from srcDir to targetDir
  */
 
 //C:\!Work\copy Test\dir1
@@ -21,7 +21,7 @@ public class FileManager {
     private String xmlName = "property.xml";
     private String xmlDefaultPath = "C:/!Work/copy Test/" + xmlName;
     private ArrayList<File> srcDir = new ArrayList<>();
-    private ArrayList<File> destDir = new ArrayList<>();
+    private ArrayList<File> targetDir = new ArrayList<>();
     private ArrayList<File[]> filesList = new ArrayList<>();
     private DataStorage dataStorage;
     private XmlParser xmlParser;
@@ -29,11 +29,11 @@ public class FileManager {
     /**
      * Constructor to set path's set in string parameters
      * @param srcDir
-     * @param destDir
+     * @param targetDir
      */
-    public FileManager(String srcDir, String destDir) {
+    public FileManager(String srcDir, String targetDir) {
         this.srcDir.add(new File(srcDir));
-        this.destDir.add(new File(destDir));
+        this.targetDir.add(new File(targetDir));
         this.filesList = getListOfFiles();
     }
 
@@ -52,7 +52,7 @@ public class FileManager {
         dataStorage = xmlParser.getDataStorage();
         for (int i = 0; i < dataStorage.getSourcePath().size(); i++) {
                 srcDir.add(new File(dataStorage.getSourcePath().get(i)));
-                destDir.add(new File(dataStorage.getDestPath().get(i)));
+                targetDir.add(new File(dataStorage.getDestPath().get(i)));
         }
         this.filesList = getListOfFiles();
         System.out.println(getProgramCurrentDirectory());
@@ -140,9 +140,9 @@ public class FileManager {
 
     public void createAllSqlFile() throws IOException {
         for (File targetDir :
-                destDir) {
-            File file = new File(targetDir.toString() + "\\All.sql");
-            if (file.createNewFile()) {
+                this.targetDir) {
+            File allSqlFile = new File(targetDir.toString() + "\\All.sql");
+            if (allSqlFile.createNewFile()) {
                 System.out.println("File All.sql created in " + targetDir.getPath() + "\\");
             } else {
                 System.out.println("File All.sql already exist " + targetDir.getPath() + "\\");
@@ -150,41 +150,41 @@ public class FileManager {
             // Add all filenames to All.sql
             //FileUtils.writeStringToFile(file, "String to append", true);
             try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(targetDir.toString() + "\\All.sql", false)))) {
-                for (File dir :
+                for (File file :
                         targetDir.listFiles()) {
-                        if (!dir.getName().equalsIgnoreCase("All.sql"))
-                            out.println(dir.getName());
+                        if (file.getName().endsWith(".sql") && !file.getName().equalsIgnoreCase("All.sql"))
+                            out.println("START " + file.getAbsolutePath());
                 }
             }catch (IOException e) {
                 System.err.println(e);
             }
-
-
         }
-
     }
 
     /**
-     * Copy all files from srcDir to destDir set in parameters
+     * Copy all files from srcDir to targetDir set in parameters
      */
     public void copyAllFiles() {
         for (int i = 0; i < filesList.size(); i++) {
             for (File file : filesList.get(i)) {
                 try {
                     InputStream in = new FileInputStream(file);
-                    if (!destDir.get(i).isDirectory() || !destDir.get(i).exists()){
-                        Path pathToFile = Paths.get(destDir.get(i).toString());
+                    if (!targetDir.get(i).isDirectory() || !targetDir.get(i).exists()){
+                        Path pathToFile = Paths.get(targetDir.get(i).toString());
                         Files.createDirectories(pathToFile);
                     }
-                    OutputStream out = new FileOutputStream(destDir.get(i) + "/" + file.getName());
-                    byte[] buf = new byte[1024];
-                    int len;
-                    while ((len = in.read(buf)) > 0) {
-                        out.write(buf, 0, len);
-                    }
-                    in.close();
-                    out.close();
-                    System.out.println(file.getName() + " file copied successfully to " + destDir.get(i).getPath());
+                    if (!file.getName().equalsIgnoreCase("all.sql") || file.isDirectory()) {
+                        OutputStream out = new FileOutputStream(targetDir.get(i) + "/" + file.getName());
+                        byte[] buf = new byte[1024];
+                        int len;
+                        while ((len = in.read(buf)) > 0) {
+                            out.write(buf, 0, len);
+                        }
+                        in.close();
+                        out.close();
+                        System.out.println(file.getName() + " file copied successfully to " + targetDir.get(i).getPath());
+                    } else
+                        System.out.println(file.getName() + " file NOT copied to " + targetDir.get(i).getPath());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

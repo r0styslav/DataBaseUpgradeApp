@@ -66,9 +66,9 @@ public class ParserSax extends DefaultHandler{
                 dataStorage.setAttributeValue(dataStorage.getAttributes().getValue(0));
                 System.out.println("Attributes " + dataStorage.getAttributes().getQName(0) + " = " + dataStorage.getAttributeValue());
                 break;
-            case "sourcepath":
+            case "source":
                 dataStorage.setSourcePath(new String(ch, start, length));
-                System.out.println("sourcepath: " + dataStorage.getSourcePath());
+                System.out.println("source: " + dataStorage.getSourcePath());
                 break;
             case "target":
                 dataStorage.setDestPath(new String(ch, start, length) + applicationType);

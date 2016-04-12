@@ -25,16 +25,6 @@ public class XmlParser {
         //dataStorage = parser.getDataStorage();
     }
 
-    public  Ompartners parseJaxb(String xmlFileSrc) throws JAXBException {
-
-        File file = new File(xmlFileSrc);
-        JAXBContext jaxbContext = JAXBContext.newInstance(Ompartners.class);
-        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        Ompartners ompartners = (Ompartners) jaxbUnmarshaller.unmarshal(file);
-        System.out.println(ompartners);
-        return ompartners;
-
-    }
     public DataStorage getDataStorage() {
         return dataStorage;
     }
