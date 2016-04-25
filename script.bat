@@ -1,0 +1,1 @@
+if not exist "C:\!Work\copyTest\TESTTEST" mkdir "C:\!Work\copyTest\TESTTEST"

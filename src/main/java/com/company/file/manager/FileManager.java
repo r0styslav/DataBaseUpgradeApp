@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public class FileManager {
     private String xmlName = "property.xml";
-    private String xmlDefaultPath = "C:/!Work/copy Test/" + xmlName;
+    private String xmlDefaultPath = "C:/!Work/copyTest/" + xmlName;
     private ArrayList<File> srcDir = new ArrayList<>();
     private ArrayList<File> targetDir = new ArrayList<>();
     private ArrayList<File[]> filesList = new ArrayList<>();
@@ -42,7 +42,7 @@ public class FileManager {
      */
     public FileManager() {
         xmlParser = new XmlParser();
-        File file = new File(getProgramCurrentDirectory() + "\\" + xmlName);
+        File file = new File(getProgramCurrentDirectory() + xmlName);
 
         try {
             xmlParser.parseSax(file.exists() ? file.getPath() : xmlDefaultPath);
@@ -63,8 +63,8 @@ public class FileManager {
      * @return String
      */
 
-    public String getProgramCurrentDirectory() {
-        return Paths.get(".").toAbsolutePath().normalize().toString();
+    public static String getProgramCurrentDirectory() {
+        return Paths.get(".").toAbsolutePath().normalize().toString() + "\\";
     }
 
     /**
@@ -76,9 +76,9 @@ public class FileManager {
         for (String scriptPath:
             dataStorage.getScriptsToExecute()) {
             try {
-                //Runtime.getRuntime().exec("cmd /c \"C:\\!Work\\copy Test\\script.bat\""); //leave for Jenkins
-                //Runtime.getRuntime().exec("cmd /c start C:\\script.bat"); //leave for Jenkins
-                Process proc = Runtime.getRuntime().exec("cmd.exe /c start " +  scriptPath);
+                // Jenkins
+                //Runtime.getRuntime().exec("cmd.exe /c " + getProgramCurrentDirectory() + scriptPath);
+                Runtime.getRuntime().exec("cmd.exe /c start " + scriptPath);
                 System.out.println("Script: " + scriptPath + " executed!");
             } catch (IOException io) {
                 System.out.println("Bat file was not executed:");
@@ -168,12 +168,12 @@ public class FileManager {
         for (int i = 0; i < filesList.size(); i++) {
             for (File file : filesList.get(i)) {
                 try {
-                    InputStream in = new FileInputStream(file);
                     if (!targetDir.get(i).isDirectory() || !targetDir.get(i).exists()){
-                        Path pathToFile = Paths.get(targetDir.get(i).toString());
-                        Files.createDirectories(pathToFile);
+                        Path targetPathToFile = Paths.get(targetDir.get(i).toString());
+                        Files.createDirectories(targetPathToFile);
                     }
-                    if (!file.getName().equalsIgnoreCase("all.sql") || file.isDirectory()) {
+                    if (!file.getName().equalsIgnoreCase("all.sql") && !file.isDirectory() && file.getName().endsWith(".sql")) {
+                        InputStream in = new FileInputStream(file);
                         OutputStream out = new FileOutputStream(targetDir.get(i) + "/" + file.getName());
                         byte[] buf = new byte[1024];
                         int len;
