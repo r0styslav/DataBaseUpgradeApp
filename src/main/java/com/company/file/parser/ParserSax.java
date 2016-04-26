@@ -1,6 +1,8 @@
 package com.company.file.parser;
 
+import com.company.file.manager.Message;
 import com.company.file.storage.DataStorage;
+import com.sun.org.apache.xpath.internal.SourceTree;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -31,7 +33,7 @@ public class ParserSax extends DefaultHandler{
      */
     @Override
     public void startDocument() throws SAXException {
-        System.out.println("Start parsing..........");
+        Message.log("Start parsing..........");
     }
 
     /**
@@ -64,19 +66,29 @@ public class ParserSax extends DefaultHandler{
             case "application":
                 applicationType = dataStorage.getAttributes().getValue(0);
                 dataStorage.setAttributeValue(dataStorage.getAttributes().getValue(0));
-                System.out.println("Attributes " + dataStorage.getAttributes().getQName(0) + " = " + dataStorage.getAttributeValue());
+                //System.out.println("Attributes " + dataStorage.getAttributes().getQName(0) + " = " + dataStorage.getAttributeValue());
+                Message.log("Attributes " + dataStorage.getAttributes().getQName(0) + " = " + dataStorage.getAttributeValue());
                 break;
             case "source":
                 dataStorage.setSourcePath(new String(ch, start, length));
-                System.out.println("source: " + dataStorage.getSourcePath());
+                //System.out.println("source: " + dataStorage.getSourcePath());
+                Message.log("source: " + dataStorage.getSourcePath());
                 break;
             case "target":
                 dataStorage.setDestPath(new String(ch, start, length) + applicationType);
-                System.out.println("target: " + dataStorage.getDestPath());
+                //System.out.println("target: " + dataStorage.getDestPath());
+                Message.log("target: " + dataStorage.getDestPath());
                 break;
             case "script":
                 dataStorage.setScriptsToExecute(new String(ch, start, length));
-                System.out.println("script: " + dataStorage.getScriptsToExecute());
+                //System.out.println("script: " + dataStorage.getScriptsToExecute());
+                Message.log("script: " + dataStorage.getScriptsToExecute());
+                break;
+            case "log":
+                dataStorage.setLogsPath(new String(ch, start, length));
+                //System.out.println("log: " + dataStorage.getLogsPath());
+                Message.log("log: " + dataStorage.getLogsPath());
+                break;
         }
     }
 
@@ -100,6 +112,7 @@ public class ParserSax extends DefaultHandler{
      */
     @Override
     public void endDocument() throws SAXException {
-        System.out.println("Finished parsing ............");
+        //System.out.println("Finished parsing ............");
+        Message.log("Finished parsing ............");
     }
 }
