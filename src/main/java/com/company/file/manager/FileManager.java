@@ -212,8 +212,8 @@ public class FileManager extends BaseSettings {
         File targetFile = new File(targetFilePath);
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
         if (sourceFile.lastModified() > targetFile.lastModified()) {
-            Message.log("New version: " + sourceFilePath + " modified: " + sdf.format(sourceFile.lastModified()));
-            Message.log("Old version: " + targetFilePath + " modified: " + sdf.format(targetFile.lastModified()));
+            Message.log("[NEW version] " + sourceFilePath + " modified: " + sdf.format(sourceFile.lastModified()));
+            Message.log("[OLD version] " + targetFilePath + " modified: " + sdf.format(targetFile.lastModified()));
             return true;
         } else {
             return false;
