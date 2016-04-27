@@ -17,4 +17,5 @@ public class BaseSettings {
     protected ArrayList<File[]> filesList = new ArrayList<>();
     protected DataStorage dataStorage;
     protected XmlParser xmlParser;
+    protected boolean areFilesDifferent = false;
 }

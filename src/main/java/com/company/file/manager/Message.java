@@ -12,20 +12,19 @@ import java.util.Date;
  */
 public class Message extends BaseSettings{
     private static Date date = new Date();
-    private static DateFormat dateExactFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-    private static DateFormat dateHourFormat = new SimpleDateFormat("ddMMyyyy");
+    private static DateFormat dateExactFormat = new SimpleDateFormat("HHmmss.ddMMyyyy");
+    private static DateFormat dateHourFormat = new SimpleDateFormat("dd.MM.yyyy");
 
     public static void log(String msg, Level lvl) {
-        Logger logger = Logger.getLogger(new Exception().getStackTrace()[1].getClassName());
+        Logger logger = Logger.getLogger(new Exception().getStackTrace()[2].getClassName());
         if (lvl == Level.INFO)
-            logger.info(dateExactFormat.format(date) + ": " + msg);
+            logger.info(msg);
         else if (lvl == Level.DEBUG)
-            logger.debug(dateExactFormat.format(date) + ": " + msg);
+            logger.debug(msg);
         else if (lvl == Level.ERROR)
-            logger.error(dateExactFormat.format(date) + ": " + msg);
+            logger.error(msg);
         else if (lvl == Level.FATAL)
-            logger.fatal(dateExactFormat.format(date) + ": " + msg);
-        //createLogFile("", dateExactFormat.format(date) + ": " + msg);
+            logger.fatal(msg);
     }
 
     public static void log(String msg) {
@@ -34,8 +33,8 @@ public class Message extends BaseSettings{
 
     public static void setLoggerPath(String path) {
         try {
-            System.setProperty("logfile.path", "logs\\" + dateHourFormat.format(date) + ".log");
-            log("logs\\" + dateHourFormat.format(date) + ".log created successfully");
+            System.setProperty("logfile.path", "logs\\" + dateExactFormat.format(date) + ".log");
+            log("logs\\" + dateExactFormat.format(date) + ".log created successfully");
 
             /*            FileInputStream in = new FileInputStream("src\\main\\resources\\log4j.properties");
             Properties props = new Properties();
