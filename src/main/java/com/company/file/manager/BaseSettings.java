@@ -4,6 +4,7 @@ import com.company.file.parser.XmlParser;
 import com.company.file.storage.DataStorage;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 /**
@@ -18,4 +19,14 @@ public class BaseSettings {
     protected DataStorage dataStorage;
     protected XmlParser xmlParser;
     protected boolean areFilesDifferent = false;
+
+    /**
+     * Method that returns current working directory
+     *
+     * @return String
+     */
+
+    public static String getProgramCurrentDirectory() {
+        return Paths.get(".").toAbsolutePath().normalize().toString() + "\\";
+    }
 }

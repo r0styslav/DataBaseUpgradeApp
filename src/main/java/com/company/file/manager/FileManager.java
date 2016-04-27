@@ -54,16 +54,6 @@ public class FileManager extends BaseSettings {
         Message.log(getProgramCurrentDirectory());
     }
 
-    /**
-     * Method that returns current working directory
-     *
-     * @return String
-     */
-
-    public static String getProgramCurrentDirectory() {
-        return Paths.get(".").toAbsolutePath().normalize().toString() + "\\";
-    }
-
     public void jobDO() {
         copyAllFiles();
         createAllSqlFile();
@@ -162,6 +152,7 @@ public class FileManager extends BaseSettings {
                         if (file.getName().endsWith(".sql") && !file.getName().equalsIgnoreCase("All.sql"))
                             out.println("START " + file.getAbsolutePath());
                     }
+                    Message.log(targetDir.toString() + "\\All.sql was updated with all script files" );
                 } catch (IOException e) {
                     Message.log(e.toString(), Level.ERROR);
                 }
@@ -178,7 +169,6 @@ public class FileManager extends BaseSettings {
         for (int i = 0; i < filesList.size(); i++) {
             for (File file : filesList.get(i)) {
                 try {
-                    clearAllRemovedFiles();
                     if (!file.getName().equalsIgnoreCase("all.sql") && !file.isDirectory() && file.getName().endsWith(".sql")) {
                         if (!targetDir.get(i).exists() || isFileChanged(file.getPath(), targetDir.get(i) + "/" + file.getName())) {
                             if (!targetDir.get(i).isDirectory() || !targetDir.get(i).exists()) {
@@ -199,21 +189,24 @@ public class FileManager extends BaseSettings {
                         } else
                             Message.log(file.getName() + " file NOT copied to " + targetDir.get(i).getPath());
                     } else
-                        Message.log(file.getName() + " file NOT copied to " + targetDir.get(i).getPath());
+                        Message.log(file.getName() + " file NOT copied to " + targetDir.get(i).getPath() + " [UP TO DATE]");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
+        clearAllRemovedFiles();
     }
-
+    /**
+     * Method should remove all files from targetDir that do not exist in sourceDir
+     */
     private void clearAllRemovedFiles() {
-        for (int i = 0; i < srcDir.size(); i++) {
-            
-        }
         
     }
 
+    /**
+     * Check if some changes were made in source file
+     */
     public boolean isFileChanged(String sourceFilePath, String targetFilePath) {
         File sourceFile = new File(sourceFilePath);
         File targetFile = new File(targetFilePath);
@@ -223,7 +216,6 @@ public class FileManager extends BaseSettings {
             Message.log("Old version: " + targetFilePath + " modified: " + sdf.format(targetFile.lastModified()));
             return true;
         } else {
-            Message.log(sourceFilePath + " is up to date");
             return false;
         }
     }

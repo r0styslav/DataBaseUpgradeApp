@@ -34,7 +34,7 @@ public class Message extends BaseSettings{
     public static void setLoggerPath(String path) {
         try {
             System.setProperty("logfile.path", "logs\\" + dateExactFormat.format(date) + ".log");
-            log("logs\\" + dateExactFormat.format(date) + ".log created successfully");
+            log(getProgramCurrentDirectory() + "logs\\" + dateExactFormat.format(date) + ".log file created successfully");
 
             /*            FileInputStream in = new FileInputStream("src\\main\\resources\\log4j.properties");
             Properties props = new Properties();
