@@ -2,13 +2,11 @@ package com.company.file.parser;
 
 import com.company.file.manager.Message;
 import com.company.file.storage.DataStorage;
-import com.sun.org.apache.xpath.internal.SourceTree;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 /**
  * Created by Rostyslav.Pash on 23-Feb-16.
@@ -33,7 +31,6 @@ public class ParserSax extends DefaultHandler{
      */
     @Override
     public void startDocument() throws SAXException {
-        Message.log("************ Start parsing property.xml..........");
     }
 
     /**
@@ -62,19 +59,23 @@ public class ParserSax extends DefaultHandler{
      */
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
+        String s = new String(ch, start, length);
+        if (s.charAt(s.length() - 1) != '\\' || s.charAt(s.length() - 1) != '/')
+            s += "\\";
+
         switch (dataStorage.getElement()) {
             case "application":
                 applicationType = dataStorage.getAttributes().getValue(0);
                 dataStorage.setAttributeValue(dataStorage.getAttributes().getValue(0));
                 break;
             case "source":
-                dataStorage.setSourcePath(new String(ch, start, length));
+                dataStorage.setSourcePath(s);
                 break;
             case "target":
-                dataStorage.setDestPath(new String(ch, start, length) + applicationType);
+                dataStorage.setDestPath(s + applicationType);
                 break;
             case "script":
-                dataStorage.setScriptsToExecute(new String(ch, start, length));
+                dataStorage.setScriptsToExecute(s);
                 break;
         }
     }
@@ -103,6 +104,5 @@ public class ParserSax extends DefaultHandler{
         Message.log("source: " + dataStorage.getSourcePath());
         Message.log("target: " + dataStorage.getDestPath());
         Message.log("scripts: " + dataStorage.getScriptsToExecute());
-        Message.log("************ Finished parsing property.xml..........");
     }
 }

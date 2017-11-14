@@ -22,9 +22,11 @@ public class Message extends BaseSettings{
         else if (lvl == Level.DEBUG)
             logger.debug(msg);
         else if (lvl == Level.ERROR)
-            logger.error(msg);
+            logger.error("---------------------- " + msg);
         else if (lvl == Level.FATAL)
             logger.fatal(msg);
+        else if (lvl == Level.WARN)
+            logger.warn(msg);
     }
 
     public static void log(String msg) {
@@ -33,8 +35,8 @@ public class Message extends BaseSettings{
 
     public static void setLoggerPath(String path) {
         try {
-            System.setProperty("logfile.path", "logs\\" + dateExactFormat.format(date) + ".log");
-            log(getProgramCurrentDirectory() + "logs\\" + dateExactFormat.format(date) + ".log file created successfully");
+            System.setProperty("logfile.path", "log\\" + dateExactFormat.format(date) + ".log");
+            log(getProgramCurrentDirectory() + System.getProperty("logfile.path") + " file created successfully");
 
             /*            FileInputStream in = new FileInputStream("src\\main\\resources\\log4j.properties");
             Properties props = new Properties();

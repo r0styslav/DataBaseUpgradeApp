@@ -6,10 +6,11 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 	    // write your code here
-
-        FileManager fileManager = new FileManager();
+        FileManager fileManager = new FileManager(args.length>0 ? args[0] : ""); // args[0] is property file name
+        //FileManager fileManager = new FileManager("property.xml"); // manually set the property file name
         fileManager.copyAllFiles();
-        fileManager.createAllSqlFile();
+        fileManager.createFileForAllScripts("sql");
+        fileManager.createFileForAllScripts("tql");
         fileManager.runScript();
     }
 }
